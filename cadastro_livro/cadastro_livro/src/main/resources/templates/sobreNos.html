@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Sobre Nós</title>
+
+    <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        body {
+          font-family: 'Poppins', sans-serif;
+          background-color: #0d0d0d;
+          color: #fff;
+          overflow-x: hidden;
+        }
+
+        header {
+          width: 100%;
+          position: fixed;
+          top: 0;
+          left: 0;
+          background: #202114;
+          height: 80px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+        }
+
+        #input_pesquisa {
+          width: 45%;
+          max-width: 480px;
+          padding: 10px 18px;
+          border-radius: 30px;
+          border: 2px solid #a9b37f;
+          background-color: #14140d;
+          color: #fff;
+          font-size: 16px;
+          outline: none;
+          text-align: center;
+          transition: all 0.3s ease;
+          box-shadow: 0 0 6px rgba(169,179,127,0.1);
+        }
+
+        .sub-cabecalho {
+          width: 100%;
+          background: #15160d;
+          display: flex;
+          justify-content: center;
+          gap: 40px;
+          padding: 10px 0;
+          position: fixed;
+          top: 80px;
+          left: 0;
+          z-index: 1002;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .sub-cabecalho a {
+          color: #fff;
+          text-decoration: none;
+          font-weight: 600;
+          transition: 0.3s;
+        }
+
+        .sub-cabecalho a:hover {
+          color: #e0cda9;
+        }
+
+        .sobre-nos {
+          margin-top: 160px;
+          padding: 60px 10%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          animation: fadeIn 1.2s ease;
+        }
+
+        .sobre-nos h1 {
+          font-size: 42px;
+          color: #d4d49b;
+          margin-bottom: 20px;
+          text-shadow: 0 0 10px rgba(212,212,155,0.4);
+          letter-spacing: 1px;
+        }
+
+        .sobre-nos p {
+          max-width: 900px;
+          font-size: 18px;
+          line-height: 1.8;
+          color: #e6e6e6;
+          margin-bottom: 40px;
+        }
+
+        .valores {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 30px;
+          margin-top: 40px;
+        }
+
+        .valor-card {
+          background: linear-gradient(135deg, #1a1a10, #242517);
+          border: 1px solid #35371f;
+          padding: 30px;
+          border-radius: 20px;
+          width: 280px;
+          text-align: center;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+          transition: all 0.3s ease;
+        }
+
+        .valor-card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 8px 18px rgba(200, 210, 130, 0.2);
+        }
+
+        .valor-card h3 {
+          color: #d4d49b;
+          margin-bottom: 12px;
+          font-size: 20px;
+        }
+
+        .valor-card p {
+          color: #ccc;
+          font-size: 15px;
+          line-height: 1.6;
+        }
+
+        .footer {
+          position: fixed;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+          background-color: #202114;
+          color: white;
+          text-align: center;
+          height: 24px;
+          font-size: 12px;
+          line-height: 24px;
+          opacity: 0.9;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(40px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+          .sobre-nos h1 {
+            font-size: 32px;
+          }
+          .sobre-nos p {
+            font-size: 16px;
+          }
+          .valor-card {
+            width: 100%;
+          }
+        }
+
+      .imagem-lateral {
+        position: fixed;
+        top: 80px;
+        right: 60%;
+        width: 800px;
+        height: 100vh;
+        background: url("/img/pngwing.com (6).png") no-repeat center right;
+        background-size: contain;
+        opacity: 0.2;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+    .imagem-fundo {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-image: url('/img/pngwing.com (3).png');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.2;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+    </style>
+</head>
+
+<body>
+<div class="imagem-fundo"></div>
+<header>
+    <input type="text" id="input_pesquisa" placeholder="Pesquisar...">
+</header>
+
+<div class="sub-cabecalho">
+    <a th:href="@{/index}">Home</a>
+    <a th:href="@{/livrosGerais}">Livros</a>
+    <a th:href="@{/sobreNos}">Sobre nós</a>
+    <a th:href="@{/perfil}">Perfil</a>
+</div>
+
+<section class="sobre-nos">
+    <h1>Quem Somos</h1>
+    <p>
+        Somos apaixonados por histórias — por cada página que transforma o leitor, por cada ideia que inspira.
+        Nosso propósito é conectar pessoas ao poder dos livros, oferecendo uma experiência única, moderna e acessível.
+        Desde o início, acreditamos que a leitura é a chave para expandir horizontes e mudar o mundo, um leitor por vez.
+    </p>
+
+    <div class="valores">
+        <div class="valor-card">
+            <h3>✨ Inspiração</h3>
+            <p>Transformamos palavras em sentimentos, e sentimentos em vontade de evoluir.</p>
+        </div>
+        <div class="valor-card">
+            <h3>📚 Conhecimento</h3>
+            <p>Buscamos sempre aprender e compartilhar — porque o saber cresce quando é dividido.</p>
+        </div>
+        <div class="valor-card">
+            <h3>🤝 Conexão</h3>
+            <p>Mais do que livros, criamos pontes entre mentes curiosas e histórias inesquecíveis.</p>
+        </div>
+    </div>
+</section>
+<div class="imagem-lateral"></div>
+<div class="footer"></div>
+
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title th:text="${livro.titulo}">Visualizar Livro</title>
+
+    <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        body {
+          font-family: Arial, sans-serif;
+          background: #0d0d0d;
+          color: #fff;
+          overflow-x: hidden;
+        }
+
+        /* =============================
+           HEADER E PESQUISA
+        ============================== */
+        header {
+          width: 100%;
+          position: fixed;
+          top: 0;
+          left: 0;
+          background: #202114;
+          height: 80px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+        }
+
+        #input_pesquisa {
+          width: 45%;
+          max-width: 480px;
+          padding: 10px 18px;
+          border-radius: 30px;
+          border: 2px solid #a9b37f;
+          background-color: #14140d;
+          color: #fff;
+          font-size: 16px;
+          outline: none;
+          text-align: center;
+          transition: all 0.3s ease;
+          box-shadow: 0 0 6px rgba(169,179,127,0.1);
+        }
+
+        #input_pesquisa::placeholder {
+          color: #c2c2c2;
+          font-style: italic;
+        }
+
+        #input_pesquisa:focus {
+          border-color: #c8d59e;
+          box-shadow: 0 0 8px #b4c489;
+          background-color: #1a1a12;
+        }
+
+        /* =============================
+           SUB-CABECALHO / MENU
+        ============================== */
+        .sub-cabecalho {
+          width: 100%;
+          background: #15160d;
+          display: flex;
+          justify-content: center;
+          gap: 40px;
+          padding: 10px 0;
+          position: fixed;
+          top: 80px;
+          left: 0;
+          z-index: 1002;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .sub-cabecalho a {
+          color: #fff;
+          text-decoration: none;
+          transition: 0.3s;
+          font-weight: 600;
+          cursor: pointer;
+        }
+
+        .sub-cabecalho a:hover {
+          color: #e0cda9;
+        }
+
+        /* =============================
+           IMAGEM DE FUNDO
+        ============================== */
+        .imagem-fundo {
+          position: fixed;
+          top: 0; left: 0;
+          width: 100vw;
+          height: 100vh;
+          background-image: url('/img/pngwing.com (3).png');
+          background-size: cover;
+          background-position: center;
+          opacity: 0.15;
+          z-index: -1;
+          pointer-events: none;
+        }
+
+        /* =============================
+           CARD DO PRODUTO
+        ============================== */
+        .product-card {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 80px;
+          background: #1b1b1b;
+          border-radius: 16px;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+          padding: 40px;
+          max-width: 1200px;
+          width: 80%;
+          align-items: center;
+          margin: 160px auto 80px;
+        }
+
+        .product-img {
+          flex: 1 1 400px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .product-img img {
+          width: 100%;
+          max-width: 400px;
+          height: 550px;
+          object-fit: cover;
+          border-radius: 10px;
+          border: 3px solid #303030;
+          box-shadow: 0 0 10px rgba(255,255,255,0.05);
+          background-color: #fff;
+        }
+
+        .product-info {
+          flex: 1 1 450px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .product-info h1 {
+          font-size: 30px;
+          margin-bottom: 8px;
+          color: #e9e9e9;
+        }
+
+        .product-info p {
+          line-height: 1.5;
+          color: #ccc;
+        }
+
+        .product-info p.desc {
+          color: #bcbcbc;
+          margin-bottom: 10px;
+        }
+
+        .price-box {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin: 10px 0;
+        }
+
+        .price {
+          font-size: 28px;
+          font-weight: 700;
+          color: #a9b37f;
+        }
+
+        .qty-box {
+          display: flex;
+          align-items: center;
+          gap: 14px;
+          margin-top: 10px;
+        }
+
+        .qty-control {
+          display: flex;
+          align-items: center;
+          border: 1px solid #3a3a3a;
+          border-radius: 8px;
+          overflow: hidden;
+        }
+
+        .qty-control button {
+          background: #202114;
+          border: 0;
+          font-size: 22px;
+          padding: 10px 16px;
+          cursor: pointer;
+          color: #fff;
+          transition: background 0.2s;
+        }
+
+        .qty-control button:hover {
+          background: #3b3b25;
+        }
+
+        .qty-control input {
+          width: 70px;
+          text-align: center;
+          font-size: 18px;
+          font-weight: 600;
+          border: none;
+          background: #14140d;
+          color: #fff;
+        }
+
+        .total {
+          font-size: 20px;
+          font-weight: 700;
+          margin-top: 10px;
+          color: #d6d6d6;
+        }
+
+        .actions {
+          display: flex;
+          gap: 10px;
+          margin-top: 18px;
+        }
+
+        .btn {
+          flex: 1;
+          border: 0;
+          cursor: pointer;
+          border-radius: 10px;
+          padding: 14px;
+          font-size: 16px;
+          font-weight: 700;
+          transition: all .2s ease;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
+        }
+
+
+        .btn-primary {
+          background: #a9b37f;
+          color: #1a1a1a;
+        }
+
+        .btn-primary:hover {
+          background: #c1cc95;
+        }
+
+        /* =============================
+           FOOTER
+        ============================== */
+        .footer {
+          position: fixed;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+          background-color: #202114;
+          color: white;
+          text-align: center;
+          height: 24px;
+          font-size: 12px;
+          line-height: 24px;
+          opacity: 0.9;
+        }
+
+        /* =============================
+           RESPONSIVIDADE
+        ============================== */
+        @media (max-width: 900px) {
+          .product-card {
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+          }
+
+          .product-img img {
+            max-width: 300px;
+            height: 420px;
+          }
+
+          .product-info h1 {
+            font-size: 24px;
+          }
+
+          .btn {
+            font-size: 14px;
+          }
+        }
+
+    </style>
+</head>
+
+<body>
+<div class="imagem-fundo"></div>
+<header>
+    <input type="text" id="input_pesquisa" placeholder="Pesquisar...">
+
+</header>
+
+<div class="sub-cabecalho" id="subCabecalho">
+    <a th:href="@{/index}">Home</a>
+    <a th:href="@{/livrosGerais}">Livros</a>
+    <a th:href="@{/sobreNos}">Sobre nós</a>
+    <a th:href="@{/perfil}">Perfil</a>
+</div>
+
+<div class="product-card">
+    <div class="product-img">
+        <img th:src="${livro.imagemUrl}" alt="Imagem do livro">
+    </div>
+
+    <div class="product-info">
+        <h1 th:text="${livro.titulo}">Título do Livro</h1>
+        <p class="desc" th:text="${livro.descricao}">Descrição do livro...</p>
+        <p><strong>Autor:</strong> <span th:text="${livro.autor}"></span></p>
+        <p><strong>Ano:</strong> <span th:text="${livro.ano}"></span></p>
+        <p><strong>Categoria:</strong> <span th:text="${livro.categoriaLivro}"></span></p>
+
+
+        <div class="pr  ice-box">
+          <span class="price" id="price"
+             th:data-price="${livro.valor}"
+             th:text="'R$ ' + ${#numbers.formatDecimal(livro.valor, 1, 'COMMA', 2, 'POINT')}">
+          </span>
+            <span style="font-size:14px; color:var(--muted);">
+            (<span th:text="${livro.quantidadeDisponivel}"></span> disponíveis)
+          </span>
+        </div>
+
+        <!-- CAMPO DE QUANTIDADE -->
+        <div class="qty-box">
+            <span>Quantidade:</span>
+            <div class="qty-control">
+                <button type="button" id="minus">−</button>
+                <input type="number" id="qty" value="1" min="1" th:max="${livro.quantidadeDisponivel}" />
+                <button type="button" id="plus">+</button>
+            </div>
+        </div>
+
+
+        <div class="actions">
+            <a href="#" class="btn-comprar btn btn-primary" id="btnComprar">Comprar</a>
+        </div>
+
+        <p class="total" id="total"></p>
+
+    </div>
+</div>
+
+<div class="footer">
+
+</div>
+<script th:inline="javascript">
+    const price = /*[[${livro.valor}]]*/ 0;
+    const maxQty = /*[[${livro.quantidadeDisponivel}]]*/ 1;
+    const qtyEl = document.getElementById('qty');
+    const totalEl = document.getElementById('total');
+    const plus = document.getElementById('plus');
+    const minus = document.getElementById('minus');
+    const btnComprar = document.getElementById('btnComprar');
+
+    function formatBRL(n){
+        return n.toLocaleString('pt-BR', {style:'currency', currency:'BRL'});
+    }
+
+    function updateTotal(){
+        let q = Math.max(1, Number(qtyEl.value));
+        if (q > maxQty) q = maxQty;
+        qtyEl.value = q;
+        totalEl.textContent = "Total: " + formatBRL(price * q);
+    }
+
+    plus.addEventListener('click', ()=>{
+        qtyEl.value = Math.min(maxQty, Number(qtyEl.value) + 1);
+        updateTotal();
+    });
+    minus.addEventListener('click', ()=>{
+        qtyEl.value = Math.max(1, Number(qtyEl.value) - 1);
+        updateTotal();
+    });
+    qtyEl.addEventListener('input', updateTotal);
+
+    // Redirecionar ao clicar no botão Comprar, enviando a quantidade
+    btnComprar.addEventListener('click', (e)=>{
+        e.preventDefault();
+        const id = /*[[${livro.id}]]*/ 0;
+        const qty = qtyEl.value;
+        window.location.href = `/comprar/${id}?qty=${qty}`;
+    });
+
+    updateTotal();
+</script>
+
+
+
+</body>
+</html>

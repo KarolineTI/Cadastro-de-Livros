@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meu Perfil</title>
+    <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        body {
+          font-family: Arial, sans-serif;
+          background: #0d0d0d;
+          color: #fff;
+          overflow-x: hidden;
+        }
+
+        /* =============================
+           HEADER E PESQUISA
+        ============================== */
+        header {
+          width: 100%;
+          position: fixed;
+          top: 0;
+          left: 0;
+          background: #202114;
+          height: 80px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+        }
+
+        #input_pesquisa {
+          width: 45%;
+          max-width: 480px;
+          padding: 10px 18px;
+          border-radius: 30px;
+          border: 2px solid #a9b37f;
+          background-color: #14140d;
+          color: #fff;
+          font-size: 16px;
+          outline: none;
+          text-align: center;
+          transition: all 0.3s ease;
+          box-shadow: 0 0 6px rgba(169,179,127,0.1);
+        }
+
+        #input_pesquisa::placeholder {
+          color: #c2c2c2;
+          font-style: italic;
+        }
+
+        #input_pesquisa:focus {
+          border-color: #c8d59e;
+          box-shadow: 0 0 8px #b4c489;
+          background-color: #1a1a12;
+        }
+
+        /* =============================
+           SUB-CABECALHO / MENU
+        ============================== */
+        .sub-cabecalho {
+          width: 100%;
+          background: #15160d;
+          display: flex;
+          justify-content: center;
+          gap: 40px;
+          padding: 10px 0;
+          position: fixed;
+          top: 80px;
+          left: 0;
+          z-index: 1002;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .sub-cabecalho a {
+          color: #fff;
+          text-decoration: none;
+          transition: 0.3s;
+          font-weight: 600;
+          cursor: pointer;
+        }
+
+        .sub-cabecalho a:hover {
+          color: #e0cda9;
+        }
+
+        /* =============================
+           IMAGEM DE FUNDO
+        ============================== */
+        .imagem-fundo {
+          position: fixed;
+          top: 0; left: 0;
+          width: 100vw;
+          height: 100vh;
+          background-image: url('/img/pngwing.com (3).png');
+          background-size: cover;
+          background-position: center;
+          opacity: 0.15;
+          z-index: -1;
+          pointer-events: none;
+        }
+
+        /* =============================
+           PERFIL / CONTEÚDO
+        ============================== */
+        .container {
+          max-width: 1200px;
+          margin: 180px auto 80px;
+          padding: 20px;
+        }
+
+        .profile {
+          text-align: center;
+          margin-bottom: 40px;
+          background: #1b1b1b;
+          padding: 40px;
+          border-radius: 16px;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        }
+
+        .avatar {
+          width: 180px;
+          height: 180px;
+          background: #3b3b25;
+          border-radius: 50%;
+          margin: 0 auto 15px;
+          border: 3px solid #a9b37f;
+        }
+
+        .profile h2 {
+          color: #e9e9e9;
+          margin-bottom: 5px;
+        }
+
+        .profile p {
+          color: #ccc;
+          margin-bottom: 10px;
+        }
+
+        .profile button {
+          padding: 10px 20px;
+          border-radius: 8px;
+          background: #a9b37f;
+          border: none;
+          color: #111;
+          font-weight: 700;
+          cursor: pointer;
+          transition: background 0.3s;
+        }
+
+        .profile button:hover {
+          background: #c1cc95;
+        }
+
+        /* =============================
+           TABS / AÇÕES
+        ============================== */
+        .purchases {
+          background: #1b1b1b;
+          padding: 30px;
+          border-radius: 16px;
+          box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        }
+
+        .purchases h3 {
+          color: #e0e0e0;
+          margin-bottom: 20px;
+        }
+
+        .tabs {
+          display: flex;
+          justify-content: space-around;
+          flex-wrap: wrap;
+          gap: 10px;
+          margin-bottom: 20px;
+        }
+
+        .tab {
+          padding: 10px 18px;
+          border: none;
+          background: #2a2a2a;
+          cursor: pointer;
+          border-radius: 8px;
+          color: #ccc;
+          font-weight: 600;
+          transition: 0.3s;
+        }
+
+        .tab.active {
+          background: #a9b37f;
+          color: #111;
+        }
+
+        .tab:hover {
+          background: #c1cc95;
+          color: #111;
+        }
+
+        .tab-content {
+          display: none;
+          padding: 20px;
+          background: #14140d;
+          border-radius: 10px;
+          box-shadow: inset 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        .tab-content.active {
+          display: block;
+        }
+
+        /* =============================
+           ITENS DE COMPRA
+        ============================== */
+        .item-carrossel {
+          width: 220px;
+          margin: 10px;
+          text-align: center;
+          background: #202020;
+          padding: 10px;
+          border-radius: 10px;
+          box-shadow: 0 0 8px rgba(0,0,0,0.4);
+        }
+
+        .item-carrossel img {
+          width: 100%;
+          height: 280px;
+          object-fit: cover;
+          border-radius: 8px;
+          border: 2px solid #303030;
+          margin-bottom: 8px;
+        }
+
+        .item-carrossel p, .item-carrossel span {
+          color: #ddd;
+        }
+
+        /* =============================
+           FOOTER
+        ============================== */
+        footer {
+          width: 100%;
+          padding: 15px;
+          text-align: center;
+          background: #202114;
+          color: #aaa;
+          font-size: 13px;
+          position: fixed;
+          bottom: 0;
+          left: 0;
+          opacity: 0.9;
+        }
+
+        /* =============================
+           RESPONSIVIDADE
+        ============================== */
+        @media (max-width: 900px) {
+          .container {
+            margin-top: 160px;
+            padding: 15px;
+          }
+
+          .profile, .purchases {
+            padding: 20px;
+          }
+
+          .tabs {
+            flex-direction: column;
+          }
+
+          .item-carrossel {
+            width: 45%;
+          }
+        }
+
+        @media (max-width: 600px) {
+          .item-carrossel {
+            width: 100%;
+          }
+        }
+
+         /* =============================
+           FOOTER
+        ============================== */
+        .footer {
+          position: fixed;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+          background-color: #202114;
+          color: white;
+          text-align: center;
+          height: 24px;
+          font-size: 12px;
+          line-height: 24px;
+          opacity: 0.9;
+        }
+
+        /* =============================
+           RESPONSIVIDADE
+        ============================== */
+        @media (max-width: 900px) {
+          .product-card {
+            flex-direction: column;
+            text-align: center;
+            padding: 20px;
+          }
+
+          .product-img img {
+            max-width: 300px;
+            height: 420px;
+          }
+
+          .product-info h1 {
+            font-size: 24px;
+          }
+
+          .btn {
+            font-size: 14px;
+          }
+        }
+
+        .editar-btn {
+          padding: 10px 20px;
+          border: none;
+          border-radius: 8px;
+          background-color: #a9b5ab;
+          color: #111;
+          font-weight: bold;
+          cursor: pointer;
+          transition: all 0.3s ease;
+        }
+
+        .editar-btn:hover {
+          background-color: #c7d2ca;
+          transform: scale(1.05);
+        }
+
+ /* === ESTILO DO MODAL === */
+  .modal-senha {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+  }
+
+  .conteudo-modal {
+      background: #1b1b1b;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.6);
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+  }
+
+  .conteudo-modal h2 {
+      color: #e0e0e0;
+      margin-bottom: 10px;
+  }
+
+  .conteudo-modal p {
+      color: #ccc;
+      margin-bottom: 15px;
+  }
+
+  .conteudo-modal input {
+      width: 80%;
+      padding: 10px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #a9b37f;
+      background-color: #111;
+      color: #fff;
+      text-align: center;
+  }
+
+  .botoes-modal {
+      display: flex;
+      justify-content: space-around;
+  }
+
+  .btn-confirmar {
+      background: #a94444;
+      color: #fff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+  }
+
+  .btn-confirmar:hover {
+      background: #c75a5a;
+  }
+
+  .btn-cancelar {
+      background: #a9b37f;
+      color: #111;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+  }
+
+  .btn-cancelar:hover {
+      background: #c1cc95;
+  }
+    </style>
+
+</head>
+<body>
+
+<div class="imagem-fundo"></div>
+<header>
+    <input type="text" id="input_pesquisa" placeholder="Pesquisar...">
+
+</header>
+<div class="sub-cabecalho" id="subCabecalho">
+    <a th:href="@{/index}">Home</a>
+    <a th:href="@{/livrosGerais}">Livros</a>
+    <a th:href="@{/sobreNos}">Sobre nós</a>
+    <a th:href="@{/perfil}">Perfil</a>
+</div>
+
+
+<div class="container">
+
+    <section class="profile">
+        <div class="avatar"></div>
+        <h2 th:text="${usuario.nomeCompleto}"></h2>
+        <p th:text="${usuario.email}"></p>
+        <form th:action="@{/logout}" method="get" style="display:inline;">
+            <button type="submit">Sair</button>
+        </form>
+
+        <form th:action="@{/editar-usuario}" method="get" style="display:inline;">
+            <button type="submit" class="botao-editar">Editar Perfil</button>
+        </form>
+
+        <form th:action="@{/apagar-conta}" method="post" style="display:inline;">
+            <button type="button" class="botao-editar" id="abrirModalSenha">Apagar Perfil</button>
+        </form>
+
+    </section>
+
+    <section class="purchases">
+        <h3>Ações:</h3>
+        <div class="tabs">
+            <button class="tab active" data-tab="recentes">Recentes</button>
+            <button class="tab" data-tab="historico">Minhas informações</button>
+            <button class="tab" data-tab="favoritos">Favoritos</button>
+        </div>
+
+        <div class="tab-content active" id="recentes">
+            <h3>Livros comprados:</h3>
+
+            <div th:if="${#lists.isEmpty(usuario.compras)}">
+                <p>Você ainda não comprou nenhum livro.</p>
+            </div>
+
+            <div th:if="${!#lists.isEmpty(usuario.compras)}" style="display:flex; flex-wrap:wrap;">
+                <div th:each="itemCompra : ${usuario.compras}" class="item-carrossel">
+                    <img th:src="${itemCompra.livro.imagemUrl}" alt="Capa do livro">
+                    <p th:text="${itemCompra.livro.titulo}" style="font-weight:bold; margin:5px 0;"></p>
+                    <span th:text="${itemCompra.livro.autor}" style="font-size:0.9rem; color:#333;"></span><br>
+
+                    <p>
+                        <strong>Quantidade:</strong>
+                        <span th:text="${itemCompra.quantidade}"></span>
+                    </p>
+
+                    <p>
+                        <strong>Total:</strong>
+                        R$ <span th:text="${#numbers.formatDecimal(itemCompra.livro.valor * itemCompra.quantidade, 2, 'POINT', 2, 'COMMA')}"></span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="tab-content" id="historico">
+            <h3>Minhas informações</h3>
+            <p><strong>Nome de Usuário:</strong> <span th:text="${usuario.nomeUsuario}"></span></p>
+            <p><strong>Nome Completo:</strong> <span th:text="${usuario.nomeCompleto}"></span></p>
+            <p><strong>Nascimento:</strong> <span th:text="${usuario.nascimento}"></span></p>
+            <p><strong>Email:</strong> <span th:text="${usuario.email}"></span></p>
+
+            <br><br>
+
+            <h3>Cartão cadastrado</h3>
+
+            <div th:if="${usuario.cartao != null}">
+                <p><strong>Nome do titular:</strong> <span th:text="${usuario.cartao.nomeDoTitular}"></span></p>
+                <p><strong>Número do cartão:</strong> <span th:text="${usuario.cartao.numeroDoCartao}"></span></p>
+                <p><strong>Validade:</strong> <span th:text="${usuario.cartao.dataVencimento}"></span></p>
+                <p><strong>Código de segurança:</strong> <span th:text="${usuario.cartao.codigoSeguranca}"></span></p>
+            </div>
+
+        </div>
+
+        <div class="tab-content" id="favoritos">
+            <p>Você ainda não tem favoritos.</p>
+        </div>
+
+    </section>
+
+</div>
+
+<!-- === MODAL CONFIRMAÇÃO DE SENHA === -->
+<div id="modal-confirmar-senha" class="modal-senha">
+    <div class="conteudo-modal">
+        <h2>Confirme sua senha</h2>
+        <p>Por segurança, digite sua senha para confirmar a exclusão da conta:</p>
+        <form id="formConfirmarSenha" th:action="@{/apagar-conta}" method="post">
+            <input type="password" name="senha" id="senhaConfirmacao" placeholder="Digite sua senha" required>
+            <div class="botoes-modal">
+                <button type="submit" class="btn-confirmar">Apagar Conta</button>
+                <button type="button" class="btn-cancelar" onclick="fecharModal()">Cancelar</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="footer">
+
+</div>
+<script>
+
+
+    const tabs = document.querySelectorAll('.tab');
+    const contents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+
+            contents.forEach(c => c.classList.remove('active'));
+            document.getElementById(tab.dataset.tab).classList.add('active');
+        });
+    });
+
+     // === ABRIR MODAL ===
+  const modal = document.getElementById("modal-confirmar-senha");
+  const abrirModal = document.getElementById("abrirModalSenha");
+
+  abrirModal.addEventListener("click", () => {
+    modal.style.display = "flex";
+  });
+
+  function fecharModal() {
+    modal.style.display = "none";
+  }
+
+  window.addEventListener("click", (e) => {
+    if (e.target === modal) fecharModal();
+  });
+</script>
+
+</body>
+</html>

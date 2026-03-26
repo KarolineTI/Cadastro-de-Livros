@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Sobre Nós</title>
+
+    <style>
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+
+        body {
+          font-family: 'Poppins', sans-serif;
+          background-color: #0d0d0d;
+          color: #fff;
+          overflow-x: hidden;
+        }
+
+        header {
+          width: 100%;
+          position: fixed;
+          top: 0;
+          left: 0;
+          background: #202114;
+          height: 80px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          z-index: 1000;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+        }
+
+        #input_pesquisa {
+          width: 45%;
+          max-width: 480px;
+          padding: 10px 18px;
+          border-radius: 30px;
+          border: 2px solid #a9b37f;
+          background-color: #14140d;
+          color: #fff;
+          font-size: 16px;
+          outline: none;
+          text-align: center;
+          transition: all 0.3s ease;
+          box-shadow: 0 0 6px rgba(169,179,127,0.1);
+        }
+
+        .sub-cabecalho {
+          width: 100%;
+          background: #15160d;
+          display: flex;
+          justify-content: center;
+          gap: 40px;
+          padding: 10px 0;
+          position: fixed;
+          top: 80px;
+          left: 0;
+          z-index: 1002;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+        }
+
+        .sub-cabecalho a {
+          color: #fff;
+          text-decoration: none;
+          font-weight: 600;
+          transition: 0.3s;
+        }
+
+        .sub-cabecalho a:hover {
+          color: #e0cda9;
+        }
+
+        .sobre-nos {
+          margin-top: 160px;
+          padding: 60px 10%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          animation: fadeIn 1.2s ease;
+        }
+
+        .sobre-nos h1 {
+          font-size: 42px;
+          color: #d4d49b;
+          margin-bottom: 20px;
+          text-shadow: 0 0 10px rgba(212,212,155,0.4);
+          letter-spacing: 1px;
+        }
+
+        .sobre-nos p {
+          max-width: 900px;
+          font-size: 18px;
+          line-height: 1.8;
+          color: #e6e6e6;
+          margin-bottom: 40px;
+        }
+
+        .valores {
+          display: flex;
+          justify-content: center;
+          flex-wrap: wrap;
+          gap: 30px;
+          margin-top: 40px;
+        }
+
+        .valor-card {
+          background: linear-gradient(135deg, #1a1a10, #242517);
+          border: 1px solid #35371f;
+          padding: 30px;
+          border-radius: 20px;
+          width: 280px;
+          text-align: center;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+          transition: all 0.3s ease;
+        }
+
+        .valor-card:hover {
+          transform: translateY(-6px);
+          box-shadow: 0 8px 18px rgba(200, 210, 130, 0.2);
+        }
+
+        .valor-card h3 {
+          color: #d4d49b;
+          margin-bottom: 12px;
+          font-size: 20px;
+        }
+
+        .valor-card p {
+          color: #ccc;
+          font-size: 15px;
+          line-height: 1.6;
+        }
+
+        .footer {
+          position: fixed;
+          left: 0;
+          bottom: 0;
+          width: 100%;
+          background-color: #202114;
+          color: white;
+          text-align: center;
+          height: 24px;
+          font-size: 12px;
+          line-height: 24px;
+          opacity: 0.9;
+        }
+
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(40px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+          .sobre-nos h1 {
+            font-size: 32px;
+          }
+          .sobre-nos p {
+            font-size: 16px;
+          }
+          .valor-card {
+            width: 100%;
+          }
+        }
+
+      .imagem-lateral {
+        position: fixed;
+        top: 80px;
+        right: 60%;
+        width: 800px;
+        height: 100vh;
+        background: url("pngwing.com (6).png") no-repeat center right;
+        background-size: contain;
+        opacity: 0.2;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+    .imagem-fundo {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-image: url('pngwing.com (3).png');
+      background-size: cover;
+      background-position: center;
+      opacity: 0.2;
+      z-index: 9999;
+      pointer-events: none;
+    }
+
+
+    /* ======================================================
+       SEÇÃO “LIVROS MAIS PROCURADOS”
+    ====================================================== */
+    .secao-livros_format_empilhadoss h2 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 2rem;
+      color: #e0cda9;
+    }
+
+    .container-livros_format_empilhadoss {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .grid-livros_format_empilhadoss {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      justify-items: center;
+    }
+
+    .livros_format_empilhados {
+      overflow: hidden;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .livros_format_empilhados img {
+      width: 200px;
+      height: 300px;
+      object-fit: cover;
+      border-radius: 10px;
+      display: block;
+    }
+
+    .livros_format_empilhados:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+    }
+
+         .imagem-fundo {
+           position: fixed;
+           top: 0; left: 0;
+           width: 100vw;
+           height: 100vh;
+           background-image: url('/img/pngwing.com (3).png');
+           background-size: cover;
+           background-position: center;
+           opacity: 0.2;
+           z-index: -1;
+           pointer-events: none;
+         }
+
+    </style>
+</head>
+
+<body>
+<div class="imagem-fundo"></div>
+<header>
+    <input type="text" id="input_pesquisa" placeholder="Pesquisar...">
+</header>
+
+<div class="sub-cabecalho">
+    <a th:href="@{/index}">Home</a>
+    <a th:href="@{/livrosGerais}">Livros</a>
+    <a th:href="@{/sobreNos}">Sobre nós</a>
+    <a th:href="@{/perfil}">Perfil</a>
+</div>
+<br><br><br><br><br><br><br><br><br>
+
+<section class="secao-livros_format_empilhadoss">
+    <div class="container-livros_format_empilhadoss">
+        <h2>Livros de Terror</h2>
+
+        <div class="grid-livros_format_empilhadoss">
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/91Z4FIZYkHL._SY425_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/81-m2B4F9hL._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/41WbBsjYhFL._SY445_SX342_ControlCacheEqualizer_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/81JaIN9NExL._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/81yT9Up940L._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+        </div>
+
+        <br>
+
+        <div class="grid-livros_format_empilhadoss">
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/91z+eHc2CvL._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/813lLXKXBoL._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/A1SiXXOLAaL._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/71buVU4N-xL._SL1000_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/91BzTCjoGQL._SL1500_.jpg">
+            </div>
+        </div>
+
+        <br><br><br>
+    </div>
+</section>
+
+<section class="secao-livros_format_empilhadoss">
+    <div class="container-livros_format_empilhadoss">
+        <h2>Livros de Aventura</h2>
+
+        <div class="grid-livros_format_empilhadoss">
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/71-haY9L0uL._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/71UKvlLXALL._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/81N-C60M53L._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/613LTnr4lgL._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/6143LQZ5KaL._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+        </div>
+
+        <br>
+
+        <div class="grid-livros_format_empilhadoss">
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/71JL8Is2PQL._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/71BCO5zrH1L._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/91bezStslYL._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/71o-CpLmwlL._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/81mfukyzJJS._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+        </div>
+
+        <br><br><br>
+    </div>
+</section>
+
+<section class="secao-livros_format_empilhadoss">
+    <div class="container-livros_format_empilhadoss">
+        <h2>Livros Romance</h2>
+
+        <div class="grid-livros_format_empilhadoss">
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/61qs2JCP4NL._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/81JAJcXAAYL._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/51DCDy0meIL._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/617d7u+qI9L._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/81w-GCfqtjL._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+        </div>
+
+        <br>
+
+        <div class="grid-livros_format_empilhadoss">
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/81-QB7nDh4L._AC_UF1000,1000_QL80_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/61NIKTSzi1L._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/91LkwwVX9VL._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/71fGGYib7uL._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/81G0g-ebQpL._AC_UL480_FMwebp_QL65_.jpg">
+            </div>
+        </div>
+
+        <br><br><br>
+    </div>
+</section>
+<div class="footer"></div>
+
+</body>
+</html>

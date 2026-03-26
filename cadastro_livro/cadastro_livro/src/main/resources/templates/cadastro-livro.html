@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastrar Livro</title>
+    <style>
+        body { font-family: Arial, sans-serif; background: #f9fafb; margin: 40px; }
+        form { background: white; padding: 20px; border-radius: 10px; width: 400px; margin: auto; box-shadow: 0 0 10px #ddd; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input, textarea { width: 100%; padding: 8px; margin-top: 4px; border-radius: 6px; border: 1px solid #ccc; }
+        button { margin-top: 15px; background: #10B981; color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; }
+        a { display: block; text-align: center; margin-top: 15px; color: #3B82F6; text-decoration: none; }
+    </style>
+</head>
+<body>
+
+<h1 style="text-align:center;">Cadastrar Livro</h1>
+
+<form th:action="@{/salvar}" th:object="${livro}" method="post">
+    <input type="hidden" th:field="*{id}">
+
+    <label>Título:</label>
+    <input type="text" th:field="*{titulo}" required>
+
+    <label>Autor:</label>
+    <input type="text" th:field="*{autor}" required>
+
+    <label>Ano:</label>
+    <input type="number" th:field="*{ano}" required>
+
+    <label>Descrição:</label>
+    <textarea th:field="*{descricao}" rows="3"></textarea>
+
+    <label>URL da Imagem:</label>
+    <input type="text" th:field="*{imagemUrl}">
+
+    <label>Valor do livro</label>
+    <input type="number" th:field="*{valor}">
+
+    <label>Quantidade disponivel</label>
+    <input type="number" th:field="*{quantidadeDisponivel}">
+
+    <label>Categoria do livro:</label>
+    <select th:field="*{categoriaLivro}" required>
+        <option value="" disabled th:selected="*{categoriaLivro} == null">-- Selecione a categoria --</option>
+        <option value="Ficção" th:selected="*{categoriaLivro} == 'Ficção'">Ficção</option>
+        <option value="Romance" th:selected="*{categoriaLivro} == 'Romance'">Romance</option>
+        <option value="Aventura" th:selected="*{categoriaLivro} == 'Aventura'">Aventura</option>
+        <option value="Fantasia" th:selected="*{categoriaLivro} == 'Fantasia'">Fantasia</option>
+        <option value="Suspense" th:selected="*{categoriaLivro} == 'Suspense'">Suspense</option>
+        <option value="Biografia" th:selected="*{categoriaLivro} == 'Biografia'">Biografia</option>
+        <option value="Infantil" th:selected="*{categoriaLivro} == 'Infantil'">Infantil</option>
+    </select>
+
+    <button type="submit">Salvar</button>
+</form>
+
+<a th:href="@{/}">⬅ Voltar</a>
+
+</body>
+</html>

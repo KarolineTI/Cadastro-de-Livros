@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site com Banner e Carrosséis</title>
+    <style>
+/* ======================================================
+   CONFIGURAÇÕES GERAIS
+====================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #0d0d0d;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+/* ======================================================
+   HEADER + BARRA DE PESQUISA
+====================================================== */
+header {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #202114;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+}
+
+#input_pesquisa {
+  width: 45%;
+  max-width: 480px;
+  padding: 10px 18px;
+  margin: 10px;
+  border-radius: 30px;
+  border: 2px solid #a9b37f;
+  background-color: #14140d;
+  color: #fff;
+  font-size: 16px;
+  outline: none;
+  text-align: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 6px rgba(169,179,127,0.1);
+}
+
+#input_pesquisa::placeholder {
+  color: #c2c2c2;
+  font-style: italic;
+}
+
+#input_pesquisa:focus {
+  border-color: #c8d59e;
+  box-shadow: 0 0 8px #b4c489;
+  background-color: #1a1a12;
+}
+
+/* ======================================================
+   SUB-CABECALHO (MENU DE NAVEGAÇÃO)
+====================================================== */
+.sub-cabecalho {
+  width: 100%;
+  background: #15160d;
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding: 10px 0;
+  position: fixed;
+  top: 80px;
+  left: 0;
+  z-index: 1002;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+}
+
+.sub-cabecalho a {
+  color: #fff;
+  text-decoration: none;
+  transition: 0.3s;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.sub-cabecalho a:hover {
+  color: #e0cda9;
+}
+
+/* ======================================================
+   BANNER PRINCIPAL
+====================================================== */
+#titulo_banner {
+  text-align: center;
+  margin-top: 130px;
+  margin-bottom: 10px;
+  font-size: 2rem;
+  color: #e0cda9;
+}
+
+.secao-banner {
+  width: 90%;
+  height: 60vh;
+  overflow: hidden;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.faixa-banner {
+  display: flex;
+  height: 100%;
+  transition: transform 0.7s ease-in-out;
+}
+
+.slide-banner {
+  min-width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+}
+
+.botao-banner {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: #fff;
+  font-size: 36px;
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2;
+}
+
+.botao-banner.esquerda { left: 20px; }
+.botao-banner.direita  { right: 20px; }
+
+/* ======================================================
+   CARROSSEL DE LIVROS
+====================================================== */
+.secao-carrossel {
+  background: #0d0d0d;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.conteudo-carrossel {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+  padding-bottom: 50px;
+}
+
+.linha h2 {
+  font-size: 1.6rem;
+  margin: 15px;
+}
+
+.carrossel {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+.faixa-carrossel {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.botao-carrossel {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.6);
+  border: none;
+  color: #fff;
+  font-size: 22px;
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 50%;
+  z-index: 2;
+}
+
+.botao-carrossel.esquerda { left: -25px; }
+.botao-carrossel.direita  { right: -25px; }
+
+/* === CAIXAS DE LIVROS === */
+.item-carrossel {
+  flex: 0 0 220px;
+  height: 370px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 50, 0, 0.5);
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  font-weight: 700;
+  font-size: 16px;
+  color: #111;
+  user-select: none;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.item-carrossel:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(0, 100, 0, 0.6);
+}
+
+.item-carrossel img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.titulo-livro {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 5px 0;
+  font-size: 0.95rem;
+  color: #111;
+}
+
+.acoes {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 5px;
+}
+
+.acoes a {
+  font-size: 0.8rem;
+  padding: 6px 10px;
+  border-radius: 5px;
+  text-decoration: none;
+  color: white;
+}
+
+.btn-comprar { background: #28a745; }
+.btn-vermais { background: #007bff; }
+
+/* ======================================================
+   SEÇÃO “LIVROS MAIS PROCURADOS”
+====================================================== */
+.secao-livros_format_empilhadoss h2 {
+  text-align: center;
+  margin-bottom: 40px;
+  font-size: 2rem;
+  color: #e0cda9;
+}
+
+.container-livros_format_empilhadoss {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.grid-livros_format_empilhadoss {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  justify-items: center;
+}
+
+.livros_format_empilhados {
+  overflow: hidden;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.livros_format_empilhados img {
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 10px;
+  display: block;
+}
+
+.livros_format_empilhados:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+}
+
+/* ======================================================
+   FUNDO TRANSLÚCIDO E RODAPÉ
+====================================================== */
+.imagem-fundo {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url('/img/pngwing.com (3).png');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.2;
+  z-index: 9999;
+  pointer-events: none;
+}
+
+.footer {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  background-color: #202114;
+  color: white;
+  text-align: center;
+  height: 20px;
+}
+
+/* ======================================================
+   RESPONSIVIDADE
+====================================================== */
+@media (max-width: 900px) {
+  .item-carrossel { flex: 0 0 160px; height: 240px; }
+  .item-carrossel img { height: 140px; }
+  .botao-carrossel { font-size: 18px; padding: 5px 8px; }
+}
+
+@media (max-width: 600px) {
+  .sub-cabecalho { flex-direction: column; gap: 10px; top: 80px; }
+  .sub-cabecalho a { padding: 5px 0; }
+  .item-carrossel { flex: 0 0 130px; height: 200px; }
+  .item-carrossel img { height: 120px; }
+  .botao-carrossel.esquerda { left: -20px; }
+  .botao-carrossel.direita  { right: -20px; }
+}
+
+        /* === MODAL TERMO DE USO === */
+.modal-termo {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.modal-termo.ativo {
+  visibility: visible;
+  opacity: 1;
+}
+
+.conteudo-termo {
+  background: #202114;
+  color: #fff;
+  padding: 30px;
+  border-radius: 15px;
+  max-width: 600px;
+  width: 90%;
+  text-align: left;
+  box-shadow: 0 0 20px rgba(0,0,0,0.6);
+}
+
+.conteudo-termo h2 {
+  color: #e0cda9;
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.conteudo-termo p {
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.botoes-termo {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.botoes-termo button {
+  background: #a9b37f;
+  color: #000;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  margin: 0 10px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.botoes-termo button:hover {
+  background: #c8d59e;
+}
+
+    </style>
+
+
+    </style>
+</head>
+<body>
+<div class="imagem-fundo"></div>
+
+
+<header>
+    <input type="text" id="input_pesquisa" placeholder="Pesquisar...">
+
+</header>
+
+
+<div class="sub-cabecalho" id="subCabecalho">
+    <a th:href="@{/index}">Home</a>
+    <a th:href="@{/livrosGerais}">Livros</a>
+    <a th:href="@{/sobreNos}">Sobre nós</a>
+    <a th:href="@{/perfil}">Perfil</a>
+</div>
+<br><br>
+
+<h2 id="titulo_banner">Livros em Promoção</h2>
+<br><br>
+<section class="secao-banner">
+    <div class="faixa-banner" id="faixaBanner">
+        <div class="slide-banner" style="background-image:url('/img/1.png')"></div>
+        <div class="slide-banner" style="background-image:url('/img/2.png')"></div>
+        <div class="slide-banner" style="background-image:url('/img/3.png')"></div>
+    </div>
+    <button class="botao-banner esquerda" id="anteriorBanner">&#10094;</button>
+    <button class="botao-banner direita" id="proximoBanner">&#10095;</button>
+</section>
+
+
+<section class="secao-carrossel">
+    <br><br><br><br><br>
+    <div class="conteudo-carrossel">
+
+        <!-- Carrossel 1 -->
+        <div class="linha">
+            <h2>Livros recentes: </h2>
+            <div class="carrossel">
+                <button class="botao-carrossel esquerda">&#10094;</button>
+                <div class="faixa-carrossel">
+                    <!-- Livros cadastrados -->
+                    <div th:each="livro : ${livros}" class="item-carrossel">
+                        <img th:src="${livro.imagemUrl}" alt="Capa">
+
+                        <div class="titulo-livro">
+                            <span th:text="${livro.titulo}"></span>
+                        </div>
+
+                        <div class="acoes">
+                            <a th:href="@{'/comprar/' + ${livro.id}}" class="btn-comprar">🛒 Comprar</a>
+                            <a th:href="@{'/livro/' + ${livro.id}}" class="btn-vermais">🔍 Ver mais</a>
+                        </div>
+                    </div>
+                </div>
+                <button class="botao-carrossel direita">&#10095;</button>
+            </div>
+        </div>
+
+    </div>
+</section>
+<br><br>
+<section class="secao-livros_format_empilhadoss">
+    <div class="container-livros_format_empilhadoss">
+        <h2>Livros mais procurados</h2>
+
+        <div class="grid-livros_format_empilhadoss">
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/81eB+7+CkUL._AC_UF1000,1000_QL80_.jpg" alt="O Poder do Hábito">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/71aFt4+OTOL._AC_UF1000,1000_QL80_.jpg" alt="O Pequeno Príncipe">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/81iqZ2HHD-L._AC_UF1000,1000_QL80_.jpg" alt="Harry Potter e a Pedra Filosofal">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/91uwocAMtSL._AC_UF1000,1000_QL80_.jpg" alt="A Sutil Arte de Ligar o F*da-se">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/81bsw6fnUiL._AC_UF1000,1000_QL80_.jpg" alt="1984">
+            </div>
+        </div>
+
+        <br>
+
+        <div class="grid-livros_format_empilhadoss">
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/81-QB7nDh4L._AC_UF1000,1000_QL80_.jpg" alt="Dom Casmurro">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/71kxa1-0mfL._AC_UF1000,1000_QL80_.jpg" alt="O Hobbit">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/71aG+xDKSYL._AC_UF1000,1000_QL80_.jpg" alt="A Menina que Roubava Livros">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://m.media-amazon.com/images/I/81drfTT9ZfL._AC_UF1000,1000_QL80_.jpg" alt="Percy Jackson e o Ladrão de Raios">
+            </div>
+            <div class="livros_format_empilhados">
+                <img src="https://upload.wikimedia.org/wikipedia/en/6/6b/DaVinciCode.jpg" alt="O Código Da Vinci">
+            </div>
+        </div>
+
+        <br><br><br>
+    </div>
+</section>
+
+<!-- === MODAL TERMO DE USO === -->
+<div id="modal-termo" class="modal-termo">
+    <div class="conteudo-termo">
+        <h2>Termos de Uso</h2>
+        <p>
+            Bem-vindo ao nosso site! Antes de continuar, é importante que você leia e aceite nossos Termos de Uso.
+            <br><br>
+            Ao utilizar este site, você concorda que:
+        <ul>
+            <li>Não fará uso indevido das informações.</li>
+            <li>Respeitará os direitos autorais e de privacidade.</li>
+            <li>As informações fornecidas são verdadeiras.</li>
+        </ul>
+        <br>
+        Caso não concorde, basta clicar em "Recusar" e você será desconectado.
+        </p>
+
+        <div class="botoes-termo">
+            <button id="aceitar-termo">Aceitar</button>
+            <button id="recusar-termo">Recusar</button>
+        </div>
+    </div>
+</div>
+
+<div class="footer">
+<p>Contato DPO/DBA - gomes@gmail.com / 11 97279-3947</p>
+</div>
+
+<script th:inline="javascript">
+
+    // CARROSSEL
+    document.querySelectorAll(".carrossel").forEach(carrossel=>{
+      const faixa = carrossel.querySelector(".faixa-carrossel");
+      const botaoEsquerda = carrossel.querySelector(".botao-carrossel.esquerda");
+      const botaoDireita = carrossel.querySelector(".botao-carrossel.direita");
+      const larguraItem = faixa.querySelector(".item-carrossel")?.offsetWidth + 25 || 0;
+
+      botaoEsquerda.addEventListener("click",()=>faixa.scrollBy({ left:-larguraItem, behavior:"smooth" }));
+      botaoDireita.addEventListener("click",()=>faixa.scrollBy({ left:larguraItem, behavior:"smooth" }));
+    });
+
+     // BANNER
+    const faixaBanner = document.getElementById('faixaBanner');
+    const slides = document.querySelectorAll('.slide-banner');
+    let atual = 0;
+    const total = slides.length;
+
+    function mostrarBanner(index){
+      faixaBanner.style.transform = `translateX(-${index*100}%)`;
+    }
+    function proximoBanner(){
+      atual = (atual+1)%total;
+      mostrarBanner(atual);
+    }
+    function anteriorBanner(){
+      atual = (atual-1+total)%total;
+      mostrarBanner(atual);
+    }
+    document.getElementById('proximoBanner').addEventListener('click', proximoBanner);
+    document.getElementById('anteriorBanner').addEventListener('click', anteriorBanner);
+    setInterval(proximoBanner,4000);
+
+
+    // === MODAL TERMOS DE USO ===
+    document.addEventListener("DOMContentLoaded", () => {
+    const modal = document.getElementById("modal-termo");
+    const aceitar = document.getElementById("aceitar-termo");
+    const recusar = document.getElementById("recusar-termo");
+
+    const usuarioEmail = /*[[${usuario.email}]]*/ 'visitante@exemplo.com';
+    console.log("Usuário logado:", usuarioEmail);
+
+
+    // Cria uma chave única por usuário
+    const chaveTermo = `termoAceito_${usuarioEmail}`;
+
+    // Exibe o termo se este usuário ainda não aceitou
+    if (!localStorage.getItem(chaveTermo)) {
+      modal.classList.add("ativo");
+    }
+
+    // Quando o usuário aceita
+    aceitar.addEventListener("click", () => {
+      localStorage.setItem(chaveTermo, "true");
+      modal.classList.remove("ativo");
+    });
+
+    // Quando o usuário recusa
+    recusar.addEventListener("click", () => {
+      alert("Você precisa aceitar os termos para usar o site.");
+      window.location.href = "/logout";
+    });
+  });
+</script>
+
+</body>
+</html>

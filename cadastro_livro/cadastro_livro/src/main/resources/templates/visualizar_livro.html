@@ -1,0 +1,89 @@
+    <!DOCTYPE html>
+    <html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <title>Livraria - Lista de Livros</title>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 40px; background: #f9fafb; }
+            h1 { color: #111827; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { padding: 10px; border-bottom: 1px solid #ddd; text-align: left; }
+            img { width: 60px; border-radius: 4px; }
+            a, button { padding: 6px 12px; border: none; cursor: pointer; border-radius: 6px; }
+            .editar { background: #3B82F6; color: white; }
+            .remover { background: #E11D48; color: white; }
+            .novo { background: #10B981; color: white; text-decoration: none; }
+            form { margin-bottom: 20px; }
+            input[type="text"] { padding: 6px; border-radius: 4px; border: 1px solid #ccc; }
+            button[type="submit"] { background: #3B82F6; color: white; border: none; border-radius: 4px; padding: 6px 12px; }
+        </style>
+    </head>
+    <body>
+
+    <h1>📚 Livros Cadastrados</h1>
+
+    <form th:action="@{/}" method="get">
+        <input type="text" name="busca" th:value="${busca}" placeholder="Buscar livro...">
+        <button type="submit">Buscar</button>
+        <a class="novo" th:href="@{/cadastro-livro}">+ Novo Livro</a>
+
+
+    </form>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Imagem</th>
+            <th>Título</th>
+            <th>Autor</th>
+            <th>Categoria</th>
+            <th>Ano</th>
+            <th>Valor</th>
+            <th>Quantidade</th>
+            <th>id</th>
+            <th>ações</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="livro : ${livros}">
+            <td><img th:src="${livro.imagemUrl}" alt="Capa"></td>
+            <td th:text="${livro.titulo}"></td>
+            <td th:text="${livro.autor}"></td>
+            <td th:text="${livro.categoriaLivro}"></td>
+            <td th:text="${livro.ano}"></td>
+            <td th:text="${livro.valor}"></td>
+            <td th:text="${livro.quantidadeDisponivel}"></td>
+            <td th:text="${livro.id}"></td>
+            <td>
+                <a class="editar" th:href="@{/editar/{id}(id=${livro.id})}">Editar</a>
+                <button class="remover"
+                        th:attr="onclick=|confirmarRemocao('/remover/${livro.id}', '${livro.titulo}')|">
+                    Remover
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <script>
+        function confirmarRemocao(url, titulo) {
+            Swal.fire({
+                title: 'Remover "' + titulo + '"?',
+                text: "Essa ação é irreversível!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Sim, remover!',
+                cancelButtonText: 'Cancelar',
+                confirmButtonColor: '#E11D48',
+                cancelButtonColor: '#6B7280',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = url;
+                }
+            });
+        }
+    </script>
+
+    </body>
+    </html>

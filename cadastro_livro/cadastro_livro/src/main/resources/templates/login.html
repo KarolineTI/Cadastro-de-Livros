@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+<style>
+    /* === RESET GERAL === */
+ * {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+ }
+
+ /* === CORPO E FUNDO === */
+ body {
+   height: 100vh;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   font-family: 'Arial', sans-serif;
+   background-color: #111;
+   color: #f5f5f5;
+   position: relative;
+   overflow: hidden;
+ }
+
+ /* Fundo com leve transparência e textura */
+ body::before {
+   content: "";
+   position: fixed;
+   top: 0;
+   left: 0;
+   width: 100%;
+   height: 100%;
+   background: url("pngwing.com (4).png") center/cover no-repeat;
+   opacity: 0.15;
+   z-index: -1;
+ }
+
+ /* === CONTAINER PRINCIPAL === */
+ .login-container {
+   width: 950px;
+   height: 700px;
+   display: flex;
+   border-radius: 20px;
+   overflow: hidden;
+   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+   background-color: #1a1a1a;
+ }
+
+ /* === LADO ESQUERDO (imagem / logo) === */
+ .login-left {
+   flex: 1;
+   background: linear-gradient(135deg, #152c27, #20463e);
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   padding: 20px;
+ }
+
+ .login-left img {
+   max-width: 80%;
+   height: auto;
+   border-radius: 12px;
+ }
+
+ /* === LADO DIREITO (formulário) === */
+ .login-right {
+   flex: 1;
+   background-color: #222;
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   padding: 40px;
+   color: #e8e8e8;
+   position: relative;
+ }
+
+ /* Contêiner interno fixo para evitar pulo entre login/cadastro */
+ .login-content {
+   width: 80%;
+   min-height: 350px; /* garante altura igual nos dois modos */
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+ }
+
+ .login-right h2 {
+   font-size: 28px;
+   margin-bottom: 25px;
+   color: #a9b5ab;
+ }
+
+ /* === FORMULÁRIOS === */
+ .login-right form {
+   width: 100%;
+   display: flex;
+   flex-direction: column;
+ }
+
+ .login-right input {
+   padding: 14px;
+   margin-bottom: 18px;
+   border: 1px solid #333;
+   border-radius: 10px;
+   background-color: #2b2b2b;
+   color: #fff;
+   font-size: 16px;
+   transition: border 0.3s, background 0.3s;
+   width: 100%;
+   box-sizing: border-box;
+ }
+
+ .login-right input:focus {
+   border-color: #a9b5ab;
+   background-color: #303b35;
+   outline: none;
+ }
+
+ /* === BOTÕES === */
+ .login-right button {
+   padding: 14px;
+   background-color: #a9b5ab;
+   color: #1a1a1a;
+   font-size: 17px;
+   font-weight: 700;
+   border: none;
+   border-radius: 10px;
+   cursor: pointer;
+   transition: all 0.3s ease;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   margin-top: 10px;
+ }
+
+ .login-right button:hover {
+   background-color: #c7d2ca;
+   transform: scale(1.03);
+ }
+
+ /* === LINK DE TROCA ENTRE LOGIN E CADASTRO === */
+ .toggle-link {
+   margin-top: 18px;
+   color: #a9b5ab;
+   text-decoration: underline;
+   cursor: pointer;
+   font-size: 15px;
+   transition: color 0.3s;
+ }
+
+ .toggle-link:hover {
+   color: #d2ddd4;
+ }
+
+ /* === IMAGEM DE FUNDO ADICIONAL (caso usada) === */
+ .imagem-fundo {
+   position: fixed;
+   top: 0; left: 0;
+   width: 100vw;
+   height: 100vh;
+   background-image: url('/img/pngwing.com (3).png');
+   background-size: cover;
+   background-position: center;
+   opacity: 0.2;
+   z-index: -1;
+   pointer-events: none;
+ }
+
+.imagem-logo {
+  width: 100%;
+  height: 100%;
+  background-image: url('/img/shared image.png');
+  background-repeat: no-repeat;   /* impede repetição */
+  background-position: center;    /* centraliza a imagem */
+  background-size: contain;       /* mantém proporção e mostra inteira */
+}
+
+/* === TÍTULO PRINCIPAL === */
+h1 {
+  position: absolute;
+  top: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 36px;
+  color: #a9b5ab;
+  letter-spacing: 2px;
+  text-align: center;
+  font-weight: 700;
+}
+
+
+</style>
+<div class="fundo-fixado"></div>
+<div class="imagem-fundo"></div>
+
+<h1>Livraria Fictício</h1>
+<div class="login-container">
+    <div class="login-left">
+        <div class="imagem-logo"></div>
+    </div>
+    <div class="login-right">
+        <div class="login-content">
+            <div th:if="${erro}" style="color: #ff6b6b; font-weight: bold; margin-bottom: 15px;">
+                <p th:text="${erro}"></p>
+            </div>
+
+            <div th:if="${mensagem}" style="color: #6bff6b; font-weight: bold; margin-bottom: 15px;">
+                <p th:text="${mensagem}"></p>
+            </div>
+
+            <h2 id="form-title">Entrar</h2>
+
+            <form id="login-form" action="/login" method="post">
+                <input type="email" id="email-login" name="email" placeholder="Email" required>
+                <input type="password" id="senha-login" name="senha" placeholder="Senha" required>
+                <button type="submit">Login</button>
+            </form>
+
+            <form id="cadastro-form" style="display: none;" action="/cadastro" method="post" onsubmit="return validarCadastro()">
+                <input type="text" id="nome" name="nomeUsuario" placeholder="Nome de usuário" required>
+                <input type="text" id="nomeCompleto" name="nomeCompleto" placeholder="Nome completo" required>
+                <input type="text" id="nascimento" name="nascimento" placeholder="nascimento" required>
+                <input type="email" id="emailCadastro" name="email" placeholder="Email" required>
+                <input type="password" id="senhaCadastro" name="senha" placeholder="Senha" required oninput="validarSenhaComplexa(this)">
+                <input type="password" id="confirmarSenha" name="confirmarSenha" placeholder="Confirmar senha" required>
+                <p id="erroCadastro" style="color: #ff6b6b; font-weight: bold; font-size: 14px; margin-top: 5px;"></p>
+                <button type="submit">Cadastrar</button>
+            </form>
+
+            <p class="toggle-link" onclick="toggleForm()">Não tem conta? Cadastre-se</p>
+            <a class="toggle-link" th:href="@{/esqueci-senha}">Esqueci a senha</a>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let cadastroAtivo = false;
+
+    function toggleForm() {
+      const titulo = document.getElementById("form-title");
+      const loginForm = document.getElementById("login-form");
+      const cadastroForm = document.getElementById("cadastro-form");
+      const toggle = document.querySelector(".toggle-link");
+      const erroDiv = document.getElementById("erroCadastro");
+
+      cadastroAtivo = !cadastroAtivo;
+
+      // limpa erro ao alternar
+      if (erroDiv) erroDiv.textContent = "";
+
+      if (cadastroAtivo) {
+        titulo.textContent = "Cadastrar";
+        loginForm.style.display = "none";
+        cadastroForm.style.display = "block";
+        toggle.textContent = "Já tem conta? Entrar";
+      } else {
+        titulo.textContent = "Entrar";
+        loginForm.style.display = "block";
+        cadastroForm.style.display = "none";
+        toggle.textContent = "Não tem conta? Cadastre-se";
+      }
+    }
+
+    function validarSenhaComplexa(input) {
+      const senha = input.value;
+      const erro = document.getElementById("erroCadastro");
+
+      // Regras da senha forte
+      const temMaiuscula = /[A-Z]/.test(senha);
+      const temMinuscula = /[a-z]/.test(senha);
+      const temNumero = /[0-9]/.test(senha);
+      const temEspecial = /[@$!%*?&._-]/.test(senha);
+      const tamanhoOk = senha.length >= 8;
+
+      if (!tamanhoOk || !temMaiuscula || !temMinuscula || !temNumero || !temEspecial) {
+        erro.textContent = "A senha deve ter pelo menos 8 caracteres, incluindo letra maiúscula, minúscula, número e símbolo.";
+        input.setCustomValidity("Senha fraca");
+      } else {
+        erro.textContent = "";
+        input.setCustomValidity("");
+      }
+    }
+
+    function validarCadastro() {
+      const senha = document.getElementById("senhaCadastro").value;
+      const confirmar = document.getElementById("confirmarSenha").value;
+      const erro = document.getElementById("erroCadastro");
+
+      if (senha !== confirmar) {
+        erro.textContent = "As senhas não coincidem.";
+        return false;
+      }
+
+      if (document.getElementById("senhaCadastro").validationMessage) {
+        erro.textContent = "A senha ainda não atende aos requisitos de segurança.";
+        return false;
+      }
+
+      return true;
+    }
+</script>
+
+
+</body>
+</html>
