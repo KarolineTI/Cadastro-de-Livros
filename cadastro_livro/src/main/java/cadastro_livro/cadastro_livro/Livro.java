@@ -1,59 +1,34 @@
 package cadastro_livro.cadastro_livro;
-import java.time.LocalDate;
-import org.springframework.cglib.core.Local;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Livro {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String nomeDoLivro;
-    private String nomeDoAutor;
-    private LocalDate dataDeLancamento;
-    private String sinopse;
 
-    // Construtor
-    public Livro() {
-    }
+    private String titulo;
+    private String autor;
+    private Integer anoPublicacao;
 
-    // Construtor com Argumentos
-    public Livro(Long id, String nomeDoLivro, String nomeDoAutor, LocalDate dataDeLancamento, String sinopse) {
-        this.id = id;
-        this.nomeDoLivro = nomeDoLivro;
-        this.nomeDoAutor = nomeDoAutor;
-        this.dataDeLancamento = dataDeLancamento;
-        this.sinopse = sinopse;
-    }
+    // Construtor padrão (Obrigatório para o Banco de Dados)
+    public Livro() {}
 
-    // Getters e Setters (métodos public para ler e alterar atributos private)
+    // Getters e Setters (Essenciais para o formulário e a lista funcionarem)
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public Long getId() {return id;}
+    public String getTitulo() { return titulo; }
+    public void setTitulo(String titulo) { this.titulo = titulo; }
 
-    public void setId(Long id) {this.id = id;}
+    public String getAutor() { return autor; }
+    public void setAutor(String autor) { this.autor = autor; }
 
-    public String getNomeDoLivro() {return nomeDoLivro;}
-
-    public void setNomeDoLivro(String nomeDoLivro) {this.nomeDoLivro = nomeDoLivro;}
-
-    public String getNomeDoAutor() {
-        return nomeDoAutor;
-    }
-
-    public void setNomeDoAutor(String nomeDoAutor) {
-        this.nomeDoAutor = nomeDoAutor;
-    }
-
-    public LocalDate getDataDeLancamento() {
-        return dataDeLancamento;
-    }
-
-    public void setDataDeLancamento(LocalDate dataDeLancamento) {
-        this.dataDeLancamento = dataDeLancamento;
-    }
-
-    public String getSinopse() {
-        return sinopse;
-    }
-
-    public void setSinopse(String sinopse) {
-        this.sinopse = sinopse;
-    }
+    public Integer getAnoPublicacao() { return anoPublicacao; }
+    public void setAnoPublicacao(Integer anoPublicacao) { this.anoPublicacao = anoPublicacao; }
 }
