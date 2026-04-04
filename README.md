@@ -85,4 +85,4 @@ Este projeto está sob a licença MIT.
 
 ---
 
-⭐ Desenvolvido por **KarolineTI**
+⭐ Desenvolvido por **KarolineTI**, **ArthurGdSC** e **Jhenie-ap**
